@@ -1,69 +1,50 @@
 const notes = require('express').Router();
+const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
+const fs = require('fs');
+// Helper method for generating unique ids
+const uuid = require('../helpers/uuid');
 
 
-const files = require('../db/notes.json');
-
-// GET Route for retrieving all the tips
 notes.get('/', (req, res) => {
-  console.info(`${req.method} request received for notes`);
-  res.json(files)
+  readFromFile('./db/notes.json').then((data) => res.json(JSON.parse(data)));
 });
 
-// app.post('/api/reviews', (req, res) => {
-//   // Log that a POST request was received
-//   console.info(`${req.method} request received to add a note`);
+// POST Route for a new UX/UI tip
+notes.post('/', (req, res) => {
+  const { title, text } = req.body;
 
-//   // Destructuring assignment for the items in req.body
-//   const { title, text} = req.body;
+  if (title) {
+    const newNote = {
+      title,
+      text,
+      note_id: uuid(),
+    };
 
-//   // If all the required properties are present
-//   if (title && text) {
-//     // Variable for the object we will save
-//     const newReview = {
-//       product,
-//       review,
-//       username,
-//       review_id: uuid(),
-//     };
+    readAndAppend(newNote, './db/notes.json');
+    res.json(`Note added successfully 🚀`);
+  } else {
+    res.error('Error in adding note');
+  }
+});
 
-//     // Convert the data to a string so we can save it
-//     const reviewString = JSON.stringify(newReview);
+notes.delete('/:id', (req, res) => {
+  const idToDelete = req.params.id;
 
-  
-//       // Obtain existing reviews
-//      fs.readFile('./db/reviews.json', 'utf8', (err, data) => {
-//       if (err) {
-//         console.error(err);
-//       } else {
-//         // Convert string into JSON object
-//         const parsedReviews = JSON.parse(data);
+  readFromFile('./db/notes.json')
+    .then((data) => JSON.parse(data))
+    .then((notes) => {
+      const updatedNotes = notes.filter((note) => note.note_id !== idToDelete);
 
-//         // Add a new review
-//         parsedReviews.push(newReview);
+      fs.writeFile('./db/notes.json', JSON.stringify(updatedNotes), (err) => {
+        if (err) {
+          res.status(500).json({ error: 'Could not delete note' });
+        } else {
+          res.json(`Note with id ${idToDelete} deleted successfully 🚀`);
+        }
+      });
+    });
+});
 
-//         // Write updated reviews back to the file
-//         fs.writeFile(
-//           './db/reviews.json',
-//           JSON.stringify(parsedReviews, null, 4),
-//           (writeErr) =>
-//             writeErr
-//               ? console.error(writeErr)
-//               : console.info('Successfully updated reviews!')
-//         );
-//       }
-//     });
-
-//     const response = {
-//       status: 'success',
-//       body: newReview,
-//     };
-
-//     console.log(response);
-//     res.status(201).json(response);
-//   } else {
-//     res.status(500).json('Error in posting review');
-//   }
-// });
 
 module.exports = notes;
 
