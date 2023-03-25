@@ -1,8 +1,9 @@
 const notes = require('express').Router();
-const { readFromFile, readAndAppend } = require('../helpers/fsUtils');
-const fs = require('fs');
+const { readFromFile, writeToFile, readAndAppend } = require('../helpers/fsUtils');
 // Helper method for generating unique ids
 const uuid = require('../helpers/uuid');
+const fs = require('fs');
+
 
 
 notes.get('/', (req, res) => {
@@ -35,7 +36,7 @@ notes.delete('/:id', (req, res) => {
     .then((notes) => {
       const updatedNotes = notes.filter((note) => note.note_id !== idToDelete);
 
-      fs.writeFile('./db/notes.json', JSON.stringify(updatedNotes), (err) => {
+      fs.writeFile('./db/notes.json', JSON.stringify(updatedNotes, null, 4), (err) => {
         if (err) {
           res.status(500).json({ error: 'Could not delete note' });
         } else {
