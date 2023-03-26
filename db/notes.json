@@ -1,12 +1,17 @@
 [
     {
-        "title": "Let Loose",
-        "text": "Let Loose by Lucy Laduca is the best song of all time :3",
+        "title": "My latest DND session",
+        "text": "Last night, my friends and I had another epic DND session. We spent hours exploring a dungeon, facing all sorts of obstacles along the way. We battled goblin bandits and even took down a powerful mage who guarded a chamber containing a precious artifact. Our victory was short-lived though, as we were soon ambushed by a group of undead led by a fierce necromancer. Despite the odds, we emerged victorious, feeling a sense of camaraderie and satisfaction. I can't wait for our next adventure together.",
         "note_id": "468d"
     },
     {
         "title": "Hi",
-        "text": "Hi from my pet monkey ooo ooo ooo",
+        "text": "Hi from my pet cat. Meow!",
         "note_id": "d4a0"
+    },
+    {
+        "title": "Shopping list",
+        "text": "Eggs, Butter, Milk, Bread...",
+        "note_id": "4911"
     }
 ]
